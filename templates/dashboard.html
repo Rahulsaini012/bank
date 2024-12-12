@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .details {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            margin: 20px auto;
+        }
+
+        .details p {
+            margin: 10px 0;
+            font-size: 1.2em;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .details p:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        form {
+            margin: 20px auto;
+            display: inline-block;
+        }
+
+        input[type="number"], input[type="submit"] {
+            padding: 10px;
+            margin: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: none;
+        }
+
+        input[type="number"] {
+            width: 200px;
+        }
+
+        input[type="submit"] {
+            background: #004d40;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            background: #00796b;
+            transform: scale(1.05);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .button-container form {
+            display: inline-block;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            color: #ffeb3b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ user['username'] }}!</h1>
+
+    <div class="details">
+        <p><strong>Account Number:</strong> {{ user['account_number'] }}</p>
+        <p><strong>Contact No.:</strong> {{ user['contact_no'] }}</p>
+        <p><strong>Balance:</strong> ₹{{ user['amount'] }}</p>
+        <p><strong>City:</strong> {{ user['city'] }}</p>
+        <p><strong>State:</strong> {{ user['state'] }}</p>
+    </div>
+
+    <div class="button-container">
+        <!-- Credit Amount Form -->
+        <form method="POST" action="/credit">
+            <input type="hidden" name="account_number" value="{{ user['account_number'] }}">
+            <input type="number" name="amount" placeholder="Amount to Credit" required>
+            <input type="submit" value="Credit">
+        </form>
+
+        <!-- Debit Amount Form -->
+        <form method="POST" action="/debit">
+            <input type="hidden" name="account_number" value="{{ user['account_number'] }}">
+            <input type="number" name="amount" placeholder="Amount to Debit" required>
+            <input type="submit" value="Debit">
+        </form>
+
+        <!-- Delete Account Form -->
+        <form method="POST" action="/delete">
+            <input type="hidden" name="account_number" value="{{ user['account_number'] }}">
+            <input type="submit" value="Delete Account" style="background: red; color: white;">
+        </form>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>
+
+
